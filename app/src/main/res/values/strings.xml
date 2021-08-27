@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Punch Clock</string>
+
+    <string name="number_zero">0</string>
+    <string name="number_one">1</string>
+    <string name="number_two">2</string>
+    <string name="number_three">3</string>
+    <string name="number_four">4</string>
+    <string name="number_five">5</string>
+    <string name="number_six">6</string>
+    <string name="number_seven">7</string>
+    <string name="number_eight">8</string>
+    <string name="number_nine">9</string>
+    <string name="btn_clear">Clear</string>
+    <string name="btn_backspace">Back</string>
+    <string name="copylight">Powered by Total Association</string>
+    <string name="location">Location</string>
+    <string name="weather_information">Weather Information</string>
+    <string name="punch_clock">Punch Clock</string>
+    <string name="log_in">Log In</string>
+    <string name="association_id">association ID</string>
+    <string name="user_email">User Email</string>
+    <string name="password">Password</string>
+    <string name="log_out">Log Out</string>
+
+</resources>

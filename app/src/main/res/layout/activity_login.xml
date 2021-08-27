@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/back2"
+    tools:context=".LoginActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            android:paddingBottom="10dp"
+            android:background="@color/black"
+            android:text="@string/punch_clock"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="38sp"
+            android:textStyle="bold" />
+       <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="0dp"
+               android:layout_weight="1"
+               android:gravity="center"
+               android:orientation="horizontal">
+
+               <Space
+                   android:layout_width="0dp"
+                   android:layout_height="match_parent"
+                   android:layout_weight="2" />
+
+               <LinearLayout
+                   android:layout_width="0dp"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="3"
+                   android:background="@android:drawable/dialog_holo_light_frame"
+                   android:gravity="center"
+                   android:orientation="vertical"
+                   android:paddingHorizontal="40sp"
+                   android:paddingVertical="30sp" >
+
+                   <TextView
+                       android:id="@+id/textView2"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_marginBottom="20dp"
+                       android:text="@string/log_in"
+                       android:textColor="#000000"
+                       android:textStyle="bold"
+                       android:textSize="35sp" />
+
+                   <com.google.android.material.textfield.TextInputLayout
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       style="@style/CustomOutlineBox"
+                       android:layout_marginBottom="20dp"
+                       android:hint="@string/association_id">
+
+                       <com.google.android.material.textfield.TextInputEditText
+                           android:id="@+id/edt_association_id"
+                           android:layout_width="match_parent"
+                           android:layout_height="wrap_content"
+                           android:imeOptions="actionNext"
+                           android:inputType="text" />
+                   </com.google.android.material.textfield.TextInputLayout>
+
+                   <com.google.android.material.textfield.TextInputLayout
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       style="@style/CustomOutlineBox"
+                       android:layout_marginBottom="20dp"
+                       android:hint="@string/user_email">
+
+                       <com.google.android.material.textfield.TextInputEditText
+                           android:id="@+id/edt_email"
+                           android:layout_width="match_parent"
+                           android:layout_height="wrap_content"
+                           android:inputType="textEmailAddress" />
+                   </com.google.android.material.textfield.TextInputLayout>
+
+                   <com.google.android.material.textfield.TextInputLayout
+                       android:layout_width="match_parent"
+                       style="@style/CustomOutlineBox"
+                       android:layout_height="wrap_content"
+                       android:layout_marginBottom="20dp"
+                       android:hint="@string/password">
+
+                       <com.google.android.material.textfield.TextInputEditText
+                           android:id="@+id/edt_password"
+                           android:layout_width="match_parent"
+                           android:layout_height="wrap_content"
+                           android:imeOptions="actionDone"
+                           android:inputType="textPassword" />
+                   </com.google.android.material.textfield.TextInputLayout>
+
+                   <com.google.android.material.button.MaterialButton
+                       android:id="@+id/btn_login"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:paddingLeft="80dp"
+                       android:paddingTop="10dp"
+                       android:paddingRight="80dp"
+                       android:paddingBottom="10dp"
+                       android:text="@string/log_in"
+                       app:backgroundTint="@android:color/black"
+                       android:textSize="24sp" />
+               </LinearLayout>
+
+               <Space
+                   android:layout_width="0dp"
+                   android:layout_height="match_parent"
+                   android:layout_weight="2" />
+
+           </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

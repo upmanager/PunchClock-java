@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/drawable/active_shadow.xml" value="0.22" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/drawable/ic_baseline_view_headline_24.xml" value="0.208203125" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/drawable/keyboard_button_bg.xml" value="0.3671875" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/drawable/keyboard_divider.xml" value="0.3671875" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/drawable/my_ripple.xml" value="0.158203125" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/drawable/progress.xml" value="0.29375" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/drawable/ripple.xml" value="0.29375" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/drawable/round_corners.xml" value="0.158203125" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/drawable/shadow.xml" value="0.3671875" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/drawable/weather_background.xml" value="0.29375" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/layout/activity_camera.xml" value="0.21923076923076923" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/layout/activity_code_input.xml" value="0.23205128205128206" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/layout/activity_login.xml" value="0.23205128205128206" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/layout/activity_main.xml" value="0.18" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/layout/activity_splash.xml" value="0.15" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/layout/code_input.xml" value="0.1621794871794872" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/layout/drawer.xml" value="0.1" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/layout/keyboard.xml" value="0.33" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/layout/layout_weather.xml" value="0.30493827160493825" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/layout/main.xml" value="0.22147435897435896" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/layout/number_pad.xml" value="0.23205128205128206" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/menu/drawer.xml" value="0.281640625" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/menu/nav_items.xml" value="0.281640625" />
+        <entry key="..\:/Work/Android/PunchClock/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.26953125" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
