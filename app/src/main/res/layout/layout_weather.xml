@@ -19,13 +19,24 @@
             android:paddingLeft="10sp"
             android:paddingRight="10sp">
 
+            <TextView
+                android:id="@+id/txt_noweather"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/get_weather_not_available"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:visibility="gone"
+                android:textStyle="bold"/>
+
             <ProgressBar
                 android:id="@+id/prog_location"
                 android:layout_width="40sp"
                 android:layout_height="40sp"
                 android:layout_gravity="center"
-                android:visibility="visible"
-                android:theme="@style/progressBar" />
+                android:theme="@style/progressBar"
+                android:visibility="visible" />
 
             <LinearLayout
                 android:id="@+id/lay_weather"

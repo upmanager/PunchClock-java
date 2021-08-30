@@ -31,19 +31,38 @@
                     android:background="@drawable/ripple"
                     android:src="@drawable/ic_baseline_view_headline_24" />
 
-                <TextView
-                    android:id="@+id/textView"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="50sp"
                     android:layout_weight="1"
+                    android:gravity="bottom|center"
+                    android:orientation="vertical"
                     android:paddingTop="15dp"
-                    android:paddingBottom="10dp"
-                    android:text="@string/punch_clock"
-                    android:textAlignment="center"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white"
-                    android:textSize="38sp"
-                    android:textStyle="bold" />
+                    android:paddingBottom="10dp">
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/punch_clock"
+                        android:textAlignment="center"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="38sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txt_active"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" (Unknow Device)"
+                        android:textColor="#FF0000"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -86,8 +105,9 @@
 
                 <com.association.punchclock.Views.AutoFitTextureView
                     android:id="@+id/autoFitTextureView"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp" />
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginRight="-200sp" />
 
             </LinearLayout>
 

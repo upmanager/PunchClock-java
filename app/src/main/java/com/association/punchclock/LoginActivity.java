@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.association.punchclock.Models.Association;
 import com.association.punchclock.Models.User;
 import com.association.punchclock.Utils.ApiService;
 import com.association.punchclock.Utils.Utils;
@@ -31,21 +32,21 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-//        edt_association_id.setText("test");
-//        edt_email.setText("info@building.com");
-//        edt_password.setText("12345678");
+        edt_association_id.setText("Building 12");
+        edt_email.setText("root");
+        edt_password.setText("secret");
     }
 
     private void login() {
         String email = edt_email.getText().toString();
         String password = edt_password.getText().toString();
-        String association_id = edt_association_id.getText().toString();
-        if (email.equals("") || password.equals("") || association_id.equals("")) {
+        String association = edt_association_id.getText().toString();
+        if (email.equals("") || password.equals("") || association.equals("")) {
             showErrorDialog("Please input valid info!");
             return;
         }
         showLoading();
-        ApiService.login(email, password, new JSONObjectRequestListener() {
+        ApiService.login(email, password, association, new JSONObjectRequestListener() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -53,16 +54,10 @@ public class LoginActivity extends BaseActivity {
                     Boolean success = response.getBoolean("success");
                     if (success) {
                         JSONObject data = response.getJSONObject("data");
-                        JSONObject user_data = data.getJSONObject("user");
-                        int id = user_data.getInt("id");
                         String token = data.getString("token");
-                        Utils.saveToken(token, association_id);
-                        User user = new User();
-                        user.setEmail(email);
-                        user.setId(id);
-                        user.setToken(token);
-                        user.setAssociation(association_id);
-                        MainApplication.user = user;
+                        Utils.initAuthData(data, token);
+                        Utils.saveToken();
+
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         return;

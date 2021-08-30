@@ -18,8 +18,8 @@ import java.util.Date;
 public final class ApiService {
 
     public interface API_URL {
-//        String BASEURL = "http://192.168.107.160";
-        String BASEURL = "https://total-association.com";
+        String BASEURL = "http://192.168.107.160";
+//        String BASEURL = "https://total-association.com";
         String LOGIN = BASEURL + "/api/login";
         String HEALTH = BASEURL + "/api/health";
         String CLOCKSTATE = BASEURL + "/api/clock-state";
@@ -28,17 +28,25 @@ public final class ApiService {
         String GETWEATHER = "https://api.weatherbit.io/v2.0/current";
     }
 
-    public static void login(String email, String password, JSONObjectRequestListener response){
+    public static void login(String email, String password, String association, JSONObjectRequestListener response){
         AndroidNetworking.post(API_URL.LOGIN)
                 .addBodyParameter("email", email)
                 .addBodyParameter("password", password)
+                .addBodyParameter("association", association)
+                .addBodyParameter("serial_number", MainApplication.mDeviceInfo.getSerialNumber())
+                .addBodyParameter("ip_address", MainApplication.mDeviceInfo.getIpAddress())
                 .setPriority(Priority.HIGH)
                 .build()
                 .getAsJSONObject(response);
     }
-    public static void checkAuth(String token, JSONObjectRequestListener response){
-        AndroidNetworking.get(API_URL.HEALTH)
+    public static void checkAuth(JSONObjectRequestListener response){
+        String token = MainApplication.user.getToken();
+        int asoid = MainApplication.association.getId();
+        AndroidNetworking.post(API_URL.HEALTH)
                 .addHeaders("Authorization", "Bearer "+token)
+                .addBodyParameter("association_id", String.valueOf(asoid))
+                .addBodyParameter("serial_number", MainApplication.mDeviceInfo.getSerialNumber())
+                .addBodyParameter("ip_address", MainApplication.mDeviceInfo.getIpAddress())
                 .setPriority(Priority.HIGH)
                 .build()
                 .getAsJSONObject(response);
@@ -47,7 +55,7 @@ public final class ApiService {
         AndroidNetworking.post(API_URL.CLOCKSTATE)
                 .addHeaders("Authorization", "Bearer "+ MainApplication.user.getToken())
                 .addBodyParameter("clock_code", clock_code)
-                .addBodyParameter("association", MainApplication.user.getAssociation())
+                .addBodyParameter("association", String.valueOf(MainApplication.association.getId()))
                 .setPriority(Priority.HIGH)
                 .build()
                 .getAsJSONObject(response);
@@ -64,7 +72,7 @@ public final class ApiService {
                 .addBodyParameter("id", MainApplication.selectedClock.getStrId())
                 .addBodyParameter("state", MainApplication.selectedClock.getStrState())
                 .addBodyParameter("workerid", MainApplication.selectedClock.getStrWorkerid())
-                .addBodyParameter("association", MainApplication.user.getAssociation())
+                .addBodyParameter("association", String.valueOf(MainApplication.association.getId()))
                 .addBodyParameter("image", MainApplication.selectedClock.image)
                 .addBodyParameter("date", date)
                 .addBodyParameter("latitude", String.valueOf(MainApplication.cur_location.getLatitude()))
@@ -73,15 +81,14 @@ public final class ApiService {
                 .addBodyParameter("city", MainApplication.cur_location.getCity())
                 .addBodyParameter("country", MainApplication.cur_location.getCountry())
                 .addBodyParameter("postal_code", MainApplication.cur_location.getPostal_code())
+                .addBodyParameter("deviceid", String.valueOf(MainApplication.mDeviceInfo.getId()))
                 .setPriority(Priority.HIGH)
                 .build()
                 .getAsJSONObject(response);
     }
     public static void getWeather(JSONObjectRequestListener response) {
-        if(MainApplication.cur_location == null) return;
         AndroidNetworking.get(API_URL.GETWEATHER)
-                .addQueryParameter("lat", String.valueOf(MainApplication.cur_location.getLatitude()))
-                .addQueryParameter("lon", String.valueOf(MainApplication.cur_location.getLongitude()))
+                .addQueryParameter("postal_code", String.valueOf(MainApplication.association.getPincode()))
                 .addQueryParameter("key", MainApplication.WEATHERAPIKEY)
                 .addHeaders("Accept", "application/json")
                 .setPriority(Priority.HIGH)

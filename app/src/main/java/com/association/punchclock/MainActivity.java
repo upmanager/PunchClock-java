@@ -41,6 +41,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -51,12 +52,12 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.association.punchclock.Models.Clock;
 import com.association.punchclock.Models.CurLocation;
+import com.association.punchclock.Models.User;
 import com.association.punchclock.Utils.ApiService;
 import com.association.punchclock.Utils.Utils;
 import com.association.punchclock.Views.AutoFitTextureView;
 import com.association.punchclock.Views.CodeInput;
 import com.association.punchclock.Views.KeyboardView;
-import com.association.punchclock.Views.WeatherView;
 
 import org.json.JSONObject;
 
@@ -85,12 +86,11 @@ public class MainActivity extends BaseActivity {
     KeyboardView mKeyboard;
     @BindView(R.id.verify_code)
     CodeInput verify_code;
-    @BindView(R.id.weather_view)
-    WeatherView weather_view;
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     @BindView(R.id.autoFitTextureView)
     AutoFitTextureView textureView;
+    @BindView(R.id.txt_active) TextView txt_active;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +112,11 @@ public class MainActivity extends BaseActivity {
                 sendPunchCode(key);
             }
         });
+        if(!MainApplication.mDeviceInfo.isActive()) {
+            txt_active.setVisibility(View.VISIBLE);
+        }else{
+            txt_active.setVisibility(View.GONE);
+        }
         checkPermisson();
     }
 
@@ -124,8 +129,20 @@ public class MainActivity extends BaseActivity {
             this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             return;
         }
-        init();
+    }
+    private void initLocation() {
+        initCamera();
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        boolean statusOfGPS = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if(!statusOfGPS) {
+            MainApplication.cur_location = new CurLocation();
+            return;
+        }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, new LocationListener() {
             @Override
             public void onLocationChanged(@NonNull Location location) {
@@ -149,14 +166,13 @@ public class MainActivity extends BaseActivity {
                 }
 
                 MainApplication.cur_location = cur_location;
-                weather_view.getWeather();
             }
         });
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        checkPermisson();
+        initLocation();
     }
 
     public void sendPunchCode(String key) {
@@ -272,7 +288,8 @@ public class MainActivity extends BaseActivity {
     }
 
     protected void logout() {
-        Utils.saveToken("", "");
+        MainApplication.user = new User();
+        Utils.saveToken();
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
@@ -364,7 +381,10 @@ public class MainActivity extends BaseActivity {
         }
     };
 
-    public void init() {
+    public void initCamera() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
         textureView.setSurfaceTextureListener(textureListener);
     }
 
@@ -372,11 +392,15 @@ public class MainActivity extends BaseActivity {
         CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         Log.e("tag", "is camera open");
 
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            Log.e("tag", "permission deny");
+            return;
+        }
         try {
             if (!mCameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                 throw new RuntimeException("Time out waiting to lock camera opening.");
             }
-            cameraId = manager.getCameraIdList()[0];
+            cameraId = manager.getCameraIdList()[1];
             CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
             StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             assert map != null;
@@ -446,9 +470,6 @@ public class MainActivity extends BaseActivity {
                 textureView.setTransform(Utils.configureTransform(width, height, imageDimension, MainActivity.this));
             }
 
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
             manager.openCamera(cameraId, stateCallback, null);
         } catch (CameraAccessException e) {
             e.printStackTrace();
@@ -555,6 +576,11 @@ public class MainActivity extends BaseActivity {
         showLoading();
         if(null == cameraDevice) {
             Log.e("tag", "cameraDevice is null");
+            updateClock();
+            return;
+        }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            Log.e("tag", "permission deny");
             updateClock();
             return;
         }

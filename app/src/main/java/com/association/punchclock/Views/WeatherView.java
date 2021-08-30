@@ -3,7 +3,6 @@ package com.association.punchclock.Views;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.BitmapRequestListener;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.association.punchclock.MainApplication;
 import com.association.punchclock.Models.Weatherbit;
 import com.association.punchclock.R;
 import com.association.punchclock.Utils.ApiService;
@@ -36,6 +36,7 @@ public class WeatherView extends FrameLayout {
     public TextView txt_weather_desc;
     public TextView txt_humidiry;
     public TextView txt_pressure;
+    public TextView txt_noweather;
 
     public WeatherView(Context context) {
         super(context);
@@ -64,16 +65,21 @@ public class WeatherView extends FrameLayout {
         txt_weather_desc = findViewById(R.id.txt_weather_desc);
         txt_humidiry = findViewById(R.id.txt_humidiry);
         txt_pressure = findViewById(R.id.txt_pressure);
+        txt_noweather = findViewById(R.id.txt_noweather);
         Timer myTimer = new Timer();
+        String pin = MainApplication.association.getPincode();
+        if(pin == null || pin.isEmpty()) {
+            prog_location.setVisibility(View.GONE);
+            lay_weather.setVisibility(View.GONE);
+            txt_noweather.setVisibility(View.VISIBLE);
+            return;
+        }
         //Set the schedule function and rate
         myTimer.scheduleAtFixedRate(new TimerTask() {
                                         @Override
-                                        public void run() {
-                                            getWeather();
+                                        public void run() { getWeather();
                                         }
-                                    },
-                0,
-                30 * 60 * 1000);
+                                    }, 0, 30 * 60 * 1000);
     }
 
     public void getWeather() {
@@ -103,7 +109,7 @@ public class WeatherView extends FrameLayout {
 
     public void updateUi(Weatherbit weatherbit) {
         prog_location.setVisibility(View.GONE);
-        lay_weather.setVisibility(VISIBLE);
+        lay_weather.setVisibility(View.VISIBLE);
         String country = weatherbit.city_name + ", " + weatherbit.country_code;
         String updated_date = "Last update: " + weatherbit.ob_time;
         String temperate = weatherbit.temp + " °C";

@@ -1,12 +1,12 @@
 package com.association.punchclock.Models;
 
 public class CurLocation {
-    private double latitude ;
-    private double longitude ;
-    private String country;
-    private String area;
-    private String postal_code;
-    private String city;
+    private double latitude =0;
+    private double longitude =0;
+    private String country = "";
+    private String area = "";
+    private String postal_code = "";
+    private String city = "";
     public void setArea(String area) {
         this.area = area;
     }

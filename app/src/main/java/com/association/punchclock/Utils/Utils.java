@@ -10,6 +10,9 @@ import android.content.res.Configuration;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.icu.text.SimpleDateFormat;
+import android.os.Build;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
@@ -17,7 +20,15 @@ import android.view.Surface;
 import androidx.annotation.NonNull;
 
 import com.association.punchclock.MainApplication;
+import com.association.punchclock.Models.Association;
+import com.association.punchclock.Models.DeviceInfo;
+import com.association.punchclock.Models.User;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,18 +44,22 @@ public class Utils {
         return (xlarge || large);
     }
     public static String SHARED_TOKEN = "TOKEN";
-    public static String SHARED_ASSOCIATION = "ASSOCIATION";
-    public static void saveToken(String token, String associationId) {
+    public static String SHARED_ASSOCIATIONID = "ASSOCIATION";
+    public static String SHARED_DEVICEINFOID = "DEVICEINFO";
+    public static void saveToken() {
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(SHARED_TOKEN, token);
-        editor.putString(SHARED_ASSOCIATION, associationId);
+        editor.putString(SHARED_TOKEN, MainApplication.user.getToken());
+        editor.putInt(SHARED_ASSOCIATIONID, MainApplication.association.getId());
+        editor.putInt(SHARED_DEVICEINFOID, MainApplication.mDeviceInfo.getId());
         editor.apply();
     }
     public static void getToken() {
         String token = sharedPref.getString(SHARED_TOKEN, null);
-        String association = sharedPref.getString(SHARED_ASSOCIATION, null);
-        MainApplication.user.setAssociation(association);
+        int associationid = sharedPref.getInt(SHARED_ASSOCIATIONID, 0);
+        int deviceinfoid = sharedPref.getInt(SHARED_DEVICEINFOID, 0);
         MainApplication.user.setToken(token);
+        MainApplication.mDeviceInfo.setId(deviceinfoid);
+        MainApplication.association.setId(associationid);
     }
     @SuppressLint("SimpleDateFormat")
     public static String parseDate(Date date){
@@ -135,6 +150,93 @@ public class Utils {
         } else {
             Log.e("tag", "Couldn't find any suitable preview size");
             return choices[0];
+        }
+    }
+
+
+//    get device ip ipv4 -----------------------------------------------
+
+    public static String getIPAddress() {
+        try {
+            List<NetworkInterface> interfaces = Collections.list(NetworkInterface.getNetworkInterfaces());
+            for (NetworkInterface intf : interfaces) {
+                List<InetAddress> addrs = Collections.list(intf.getInetAddresses());
+                for (InetAddress addr : addrs) {
+                    if (!addr.isLoopbackAddress()) {
+                        String sAddr = addr.getHostAddress();
+                        boolean isIPv4 = sAddr.indexOf(':')<0;
+                        if (isIPv4) return sAddr;
+                    }
+                }
+            }
+        } catch (Exception ignored) { } // for now eat exceptions
+        return "";
+    }
+
+    @SuppressLint("HardwareIds")
+    public static String getDeviceId(Context context) {
+        String deviceId = "";
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            deviceId = Settings.Secure.getString(context.getContentResolver(),Settings.Secure.ANDROID_ID);
+        }else {
+            final TelephonyManager mTelephony = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
+
+            if (mTelephony.getDeviceId() != null) deviceId = mTelephony.getDeviceId();
+            else deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        }
+
+        return deviceId;
+    }
+    public static void initAuthData (JSONObject data, String token) {
+
+        // -------------- get user ------------------------------------------
+        User user = new User();
+        try {
+            JSONObject user_data = data.getJSONObject("user");
+            int id = user_data.getInt("id");
+            String username = user_data.getString("username");
+
+            user.setUsername(username);
+            user.setId(id);
+            user.setToken(token);
+        }catch (Exception err){
+            err.printStackTrace();
+        }
+        MainApplication.user = user;
+
+
+        // -------------------- get association ---------------------------------
+        Association asso = new Association();
+        try{
+            JSONObject association_data = data.getJSONObject("association");
+            int association_id = association_data.getInt("id");
+            String address1 = association_data.getString("address1");
+            String address2 = association_data.getString("address2");
+            String city = association_data.getString("city");
+            String country = association_data.getString("country");
+            String name = association_data.getString("name");
+            String pincode = association_data.getString("pincode");
+            asso.setId(association_id);
+            asso.setAddress1(address1);
+            asso.setCity(city);
+            asso.setCountry(country);
+            asso.setAddress2(address2);
+            asso.setName(name);
+            asso.setPincode(pincode);
+        }catch (Exception err){
+
+        }
+        MainApplication.association = asso;
+
+        // -------------------- get device info ---------------------------------
+        try {
+            JSONObject device_info = data.getJSONObject("device_info");
+            int device_id = device_info.getInt("id");
+            MainApplication.mDeviceInfo.setId(device_id);
+            int active = device_info.getInt("active");
+            MainApplication.mDeviceInfo.setActive(active == 1);
+        }catch (Exception err){
+            err.printStackTrace();
         }
     }
 

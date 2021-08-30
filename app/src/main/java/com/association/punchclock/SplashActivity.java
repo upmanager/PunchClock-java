@@ -17,29 +17,37 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
         Utils.getToken();
-        ApiService.checkAuth(MainApplication.user.getToken(), new JSONObjectRequestListener() {
+        ApiService.checkAuth(new JSONObjectRequestListener() {
             @Override
             public void onResponse(JSONObject response) {
                 try{
-                    MainApplication.user.setId(response.getInt("id"));
-                    MainApplication.user.setEmail(response.getString("email"));
+                    boolean success = response.getBoolean("success");
+                    if(success){
+                        JSONObject data = response.getJSONObject("data");
+                        Utils.initAuthData(data, MainApplication.user.getToken());
+
+                        startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                        finish();
+                        return;
+                    }
                 }catch (Exception err){
                     err.printStackTrace();
                 }
-                startActivity(new Intent(SplashActivity.this, MainActivity.class));
-                finish();
+                accessFailed();
             }
 
             @Override
             public void onError(ANError anError) {
-                Utils.saveToken("", "");
-                MainApplication.user = new User();
-                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                finish();
+                accessFailed();
             }
         });
+    }
+    private void accessFailed(){
+        MainApplication.user = new User();
+        Utils.saveToken();
+        startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+        finish();
     }
 
 }
