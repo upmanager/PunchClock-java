@@ -18,8 +18,8 @@ import java.util.Date;
 public final class ApiService {
 
     public interface API_URL {
-        String BASEURL = "http://192.168.107.160";
-//        String BASEURL = "https://total-association.com";
+//        String BASEURL = "http://192.168.107.160";
+        String BASEURL = "https://total-association.com";
         String LOGIN = BASEURL + "/api/login";
         String HEALTH = BASEURL + "/api/health";
         String CLOCKSTATE = BASEURL + "/api/clock-state";
