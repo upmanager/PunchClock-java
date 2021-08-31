@@ -19,7 +19,7 @@
     <string name="punch_clock">Punch Clock</string>
     <string name="log_in">Log In</string>
     <string name="association_id">association ID</string>
-    <string name="user_email">User Email</string>
+    <string name="user_email">User Name</string>
     <string name="password">Password</string>
     <string name="log_out">Log Out</string>
     <string name="get_weather_not_available">get Weather not available</string>

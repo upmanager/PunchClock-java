@@ -32,9 +32,9 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-        edt_association_id.setText("Building 12");
-        edt_email.setText("root");
-        edt_password.setText("secret");
+//        edt_association_id.setText("Building 12");
+//        edt_email.setText("root");
+//        edt_password.setText("secret");
     }
 
     private void login() {
