@@ -21,17 +21,13 @@ import androidx.annotation.NonNull;
 
 import com.association.punchclock.MainApplication;
 import com.association.punchclock.Models.Association;
-import com.association.punchclock.Models.DeviceInfo;
 import com.association.punchclock.Models.User;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -176,13 +172,25 @@ public class Utils {
     @SuppressLint("HardwareIds")
     public static String getDeviceId(Context context) {
         String deviceId = "";
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            deviceId = Settings.Secure.getString(context.getContentResolver(),Settings.Secure.ANDROID_ID);
-        }else {
-            final TelephonyManager mTelephony = (TelephonyManager)context.getSystemService(Context.TELEPHONY_SERVICE);
-
-            if (mTelephony.getDeviceId() != null) deviceId = mTelephony.getDeviceId();
-            else deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+            } else {
+                TelephonyManager mTelephony = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+                if (mTelephony.getDeviceId() != null) deviceId = mTelephony.getDeviceId();
+                else
+                    deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+            }
+        } catch (Exception err) {
+            err.printStackTrace();
+        }
+        if (deviceId == null || deviceId.isEmpty()) {
+            try {
+                deviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+            } catch (Exception err) {
+                err.printStackTrace();
+                deviceId = "Unknow device";
+            }
         }
 
         return deviceId;

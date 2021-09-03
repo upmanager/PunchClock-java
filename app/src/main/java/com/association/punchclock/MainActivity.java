@@ -4,7 +4,9 @@ import static android.os.Environment.DIRECTORY_PICTURES;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -33,6 +35,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.provider.Settings;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -40,7 +43,6 @@ import android.view.Gravity;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -112,13 +114,15 @@ public class MainActivity extends BaseActivity {
                 sendPunchCode(key);
             }
         });
-        if(!MainApplication.mDeviceInfo.isActive()) {
+        if (!MainApplication.mDeviceInfo.isActive()) {
             txt_active.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             txt_active.setVisibility(View.GONE);
         }
         checkPermisson();
     }
+
+    private boolean enablingLocation = false;
 
     private void checkPermisson() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -129,17 +133,15 @@ public class MainActivity extends BaseActivity {
             this.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             return;
         }
-    }
-    private void initLocation() {
         initCamera();
+        checkGPS();
+    }
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
+    private void initLocation() {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         boolean statusOfGPS = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        if(!statusOfGPS) {
+
+        if (!statusOfGPS) {
             MainApplication.cur_location = new CurLocation();
             return;
         }
@@ -164,15 +166,42 @@ public class MainActivity extends BaseActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
                 MainApplication.cur_location = cur_location;
             }
         });
     }
 
+    private void checkGPS() {
+        boolean hasGps = getPackageManager().hasSystemFeature(PackageManager.FEATURE_LOCATION_GPS);
+        if (!hasGps) return;
+        LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Location Manager");
+            builder.setMessage("Would you like to enable GPS?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    enablingLocation = true;
+                    startActivity(i);
+                }
+            });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                }
+            });
+            builder.create().show();
+        } else {
+            initLocation();
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        initLocation();
+        initCamera();
+        checkGPS();
     }
 
     public void sendPunchCode(String key) {
@@ -557,10 +586,15 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (enablingLocation) {
+            enablingLocation = false;
+            initLocation();
+
+        }
         Log.e("tag", "onResume");
         startBackgroundThread();
         if (textureView.isAvailable()) {
-            openCamera(textureView.getWidth(),textureView.getHeight());
+            openCamera(textureView.getWidth(), textureView.getHeight());
         } else {
             textureView.setSurfaceTextureListener(textureListener);
         }
