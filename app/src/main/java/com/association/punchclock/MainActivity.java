@@ -114,8 +114,7 @@ public class MainActivity extends BaseActivity {
                 sendPunchCode(key);
             }
         });
-        if (!MainApplication.mDeviceInfo.isActive()) {
-            txt_active.setVisibility(View.VISIBLE);
+        if (MainApplication.mDeviceInfo.isActive()) {
             txt_active.setText(MainApplication.mDeviceInfo.getName());
             txt_active.setTextColor(getColor(R.color.white));
         } else {

@@ -6,8 +6,6 @@ import android.view.View;
 
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
-import com.association.punchclock.Models.Association;
-import com.association.punchclock.Models.User;
 import com.association.punchclock.Utils.ApiService;
 import com.association.punchclock.Utils.Utils;
 import com.google.android.material.textfield.TextInputEditText;
@@ -33,8 +31,8 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 //        edt_association_id.setText("Building 12");
-//        edt_email.setText("root");
-//        edt_password.setText("secret");
+//        edt_email.setText("admin");
+//        edt_password.setText("12345678");
     }
 
     private void login() {
