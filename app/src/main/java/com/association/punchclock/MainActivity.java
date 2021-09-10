@@ -116,8 +116,11 @@ public class MainActivity extends BaseActivity {
         });
         if (!MainApplication.mDeviceInfo.isActive()) {
             txt_active.setVisibility(View.VISIBLE);
+            txt_active.setText(MainApplication.mDeviceInfo.getName());
+            txt_active.setTextColor(getColor(R.color.white));
         } else {
-            txt_active.setVisibility(View.GONE);
+            txt_active.setText(MainApplication.mDeviceInfo.getSerialNumber());
+            txt_active.setTextColor(getColor(R.color.red));
         }
         checkPermisson();
     }

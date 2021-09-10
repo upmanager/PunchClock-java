@@ -2,12 +2,22 @@ package com.association.punchclock.Models;
 
 public class DeviceInfo {
     private int id;
+    private String name;
     private String SerialNumber;
     private String IpAddress;
     private boolean isActive;
 
     public int getId() {
         return id;
+    }
+
+    public String getName() {
+        if (name == null || name.equals("") || name.equals("null")) return getSerialNumber();
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getIpAddress() {

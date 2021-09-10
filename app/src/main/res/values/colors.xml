@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="back2">#E4000000</color>
     <color name="drawer_back">#A31B1B1B</color>
+    <color name="red">#ff0000</color>
 </resources>

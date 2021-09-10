@@ -37,6 +37,7 @@ public class WeatherView extends FrameLayout {
     public TextView txt_humidiry;
     public TextView txt_pressure;
     public TextView txt_noweather;
+    public TextView txt_building;
 
     public WeatherView(Context context) {
         super(context);
@@ -66,9 +67,11 @@ public class WeatherView extends FrameLayout {
         txt_humidiry = findViewById(R.id.txt_humidiry);
         txt_pressure = findViewById(R.id.txt_pressure);
         txt_noweather = findViewById(R.id.txt_noweather);
+        txt_building = findViewById(R.id.txt_building);
+        txt_building.setText(MainApplication.association.getName());
         Timer myTimer = new Timer();
         String pin = MainApplication.association.getPincode();
-        if(pin == null || pin.isEmpty()) {
+        if (pin == null || pin.isEmpty()) {
             prog_location.setVisibility(View.GONE);
             lay_weather.setVisibility(View.GONE);
             txt_noweather.setVisibility(View.VISIBLE);

@@ -11,6 +11,21 @@
         android:layout_marginTop="20sp"
         android:gravity="center|bottom">
 
+        <TextView
+            android:id="@+id/txt_building"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="26sp"
+            tools:text="Manors of Inverrary Building 12" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2sp"
+            android:layout_marginHorizontal="20sp"
+            android:layout_marginVertical="12dp"
+            android:background="@color/gray_btn_bg_color" />
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0sp"
@@ -128,15 +143,10 @@
             android:background="@color/gray_btn_bg_color"
             />
 
-        <DigitalClock
-            android:id="@+id/simpleDigitalClock"
+        <com.association.punchclock.Views.CurrentDateTime
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|bottom"
             android:paddingTop="20sp"
-            android:paddingBottom="20sp"
-            android:textColor="@color/white"
-            android:textSize="25sp"
-            android:textStyle="bold" />
+            android:paddingBottom="20sp" />
     </LinearLayout>
 </FrameLayout>

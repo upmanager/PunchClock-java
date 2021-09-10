@@ -239,6 +239,8 @@ public class Utils {
         // -------------------- get device info ---------------------------------
         try {
             JSONObject device_info = data.getJSONObject("device_info");
+            String name = device_info.getString("name");
+            MainApplication.mDeviceInfo.setName(name);
             int device_id = device_info.getInt("id");
             MainApplication.mDeviceInfo.setId(device_id);
             int active = device_info.getInt("active");
