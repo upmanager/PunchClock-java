@@ -94,6 +94,7 @@ public class MainActivity extends BaseActivity {
     AutoFitTextureView textureView;
     @BindView(R.id.txt_active) TextView txt_active;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,11 +115,11 @@ public class MainActivity extends BaseActivity {
                 sendPunchCode(key);
             }
         });
+
+        txt_active.setText(MainApplication.mDeviceInfo.getName());
         if (MainApplication.mDeviceInfo.isActive()) {
-            txt_active.setText(MainApplication.mDeviceInfo.getName());
             txt_active.setTextColor(getColor(R.color.white));
         } else {
-            txt_active.setText(MainApplication.mDeviceInfo.getSerialNumber());
             txt_active.setTextColor(getColor(R.color.red));
         }
         checkPermisson();
